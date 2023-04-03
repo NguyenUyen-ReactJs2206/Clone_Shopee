@@ -1,32 +1,21 @@
 import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
-import { rules } from 'src/utils/rules'
 
 export default function Login() {
   const {
     register,
     handleSubmit,
-    watch,
     getValues,
     formState: { errors }
   } = useForm()
 
-  const onSubmit = handleSubmit(
-    (data) => {
-      // console.log(data, 'data')
-    },
-    (data) => {
-      const password = getValues('password')
-      console.log(password)
-    }
-  )
+  const onSubmit = handleSubmit((data) => {
+    console.log(data, 'data')
+  })
 
-  // const formValue = watch('password')
-
-  // console.log(formValue)
   return (
     <div className='bg-orange'>
-      <div className='mx-auto max-w-7xl px-4'>
+      <div className='container'>
         <div className='grid grid-cols-1 lg:grid-cols-5 lg:py-32 lg:pr-10'>
           <div className='lg:col-span-2 lg:col-start-4'>
             <form className='rounded bg-white p-10 shadow-sm' onSubmit={onSubmit}>
@@ -36,7 +25,6 @@ export default function Login() {
                   type='email'
                   placeholder='Email'
                   className='w-full rounded-sm border border-gray-300 p-3 outline-none focus:border-gray-500 focus:shadow-sm'
-                  {...register('email', rules.email)}
                 />
                 <div className='mt-1 min-h-[1.25rem] text-sm text-red-600'>aa</div>
               </div>
@@ -46,7 +34,6 @@ export default function Login() {
                   placeholder='Password'
                   autoComplete='on'
                   className='w-full rounded-sm border border-gray-300 p-3 outline-none focus:border-gray-500 focus:shadow-sm'
-                  {...register('password', rules.password)}
                 />
                 <div className='mt-1 min-h-[1.25rem] text-sm text-red-600'>bb</div>
               </div>
