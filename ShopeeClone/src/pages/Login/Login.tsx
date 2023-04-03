@@ -1,33 +1,60 @@
+import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
+import { rules } from 'src/utils/rules'
 
 export default function Login() {
+  const {
+    register,
+    handleSubmit,
+    watch,
+    getValues,
+    formState: { errors }
+  } = useForm()
+
+  const onSubmit = handleSubmit(
+    (data) => {
+      // console.log(data, 'data')
+    },
+    (data) => {
+      const password = getValues('password')
+      console.log(password)
+    }
+  )
+
+  // const formValue = watch('password')
+
+  // console.log(formValue)
   return (
     <div className='bg-orange'>
       <div className='mx-auto max-w-7xl px-4'>
         <div className='grid grid-cols-1 lg:grid-cols-5 lg:py-32 lg:pr-10'>
           <div className='lg:col-span-2 lg:col-start-4'>
-            <form className='rounded bg-white p-10 shadow-sm'>
+            <form className='rounded bg-white p-10 shadow-sm' onSubmit={onSubmit}>
               <div className='text-2xl'>Đăng Nhập</div>
-              <div className='mt-3'>
+              <div className='mt-2'>
                 <input
                   type='email'
-                  name='email'
                   placeholder='Email'
                   className='w-full rounded-sm border border-gray-300 p-3 outline-none focus:border-gray-500 focus:shadow-sm'
+                  {...register('email', rules.email)}
                 />
-                <div className='mt-1 min-h-[1rem] text-sm text-red-600'>aa</div>
+                <div className='mt-1 min-h-[1.25rem] text-sm text-red-600'>aa</div>
               </div>
-              <div className='mt-3'>
+              <div className='mt-2'>
                 <input
                   type='password'
-                  name='password'
                   placeholder='Password'
+                  autoComplete='on'
                   className='w-full rounded-sm border border-gray-300 p-3 outline-none focus:border-gray-500 focus:shadow-sm'
+                  {...register('password', rules.password)}
                 />
-                <div className='mt-1 min-h-[1rem] text-sm text-red-600'>bb</div>
+                <div className='mt-1 min-h-[1.25rem] text-sm text-red-600'>bb</div>
               </div>
-              <div className='mt-3'>
-                <button className='w-full bg-red-500 px-2 py-4 text-center text-sm uppercase text-white hover:bg-red-600'>
+              <div className='mt-2'>
+                <button
+                  type='submit'
+                  className='w-full bg-red-500 px-2 py-4 text-center text-sm uppercase text-white hover:bg-red-600'
+                >
                   Đăng nhập
                 </button>
               </div>
