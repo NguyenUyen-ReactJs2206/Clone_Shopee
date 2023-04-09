@@ -28,7 +28,7 @@ export default function Login() {
         console.log('data', data)
       },
       onError: (error) => {
-        if (isAxiosUnprocessableEntityError<ResponseApi<Omit<FormData, 'confirm_password'>>>(error)) {
+        if (isAxiosUnprocessableEntityError<ResponseApi<FormData>>(error)) {
           const formError = error.response?.data.data
           if (formError?.email) {
             setError('email', {
