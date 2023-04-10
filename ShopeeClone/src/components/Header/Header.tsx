@@ -51,7 +51,7 @@ export default function Header() {
             renderPopover={
               <div className='relative rounded-sm border border-t-0 border-gray-200 bg-white shadow-md'>
                 <Link
-                  to='/'
+                  to='/profile'
                   className='block w-full bg-white px-4 py-3 text-left hover:bg-slate-100 hover:text-cyan-500'
                 >
                   Tài khoản của tôi
@@ -125,7 +125,6 @@ export default function Header() {
           <div className='col-span-1 justify-self-center'>
             <Popover
               placement='bottom-end'
-              className=''
               renderPopover={
                 <div className='relative max-w-[400px] rounded-sm border border-t-0 border-gray-200 bg-white shadow-md'>
                   <div className='p-2'>
