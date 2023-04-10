@@ -11,7 +11,7 @@ export default function Header() {
             // initialOpen
             className='flex cursor-pointer items-center py-1 hover:text-gray-300'
             renderPopover={
-              <div className='relative rounded-sm border border-gray-200 bg-white shadow-md'>
+              <div className='relative rounded-sm border border-t-0 border-gray-200 bg-white shadow-md'>
                 <div className='flex flex-col px-3 py-2'>
                   <button className='px-3 py-2 pl-3 pr-28 hover:text-orange'>Tiếng Việt</button>
                   <button className='mt-2 px-3 py-2 pl-3 pr-28 hover:text-orange'>English</button>
@@ -34,12 +34,22 @@ export default function Header() {
               />
             </svg>
             <span className='mx-1'>Tiếng Việt</span>
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              fill='none'
+              viewBox='0 0 24 24'
+              strokeWidth={1.5}
+              stroke='currentColor'
+              className='h-5 w-5'
+            >
+              <path strokeLinecap='round' strokeLinejoin='round' d='M19.5 8.25l-7.5 7.5-7.5-7.5' />
+            </svg>
           </Popover>
 
           <Popover
             className='ml-6 flex cursor-pointer items-center py-1 hover:text-gray-300'
             renderPopover={
-              <div className='relative rounded-sm border border-gray-200 bg-white shadow-md'>
+              <div className='relative rounded-sm border border-t-0 border-gray-200 bg-white shadow-md'>
                 <Link
                   to='/'
                   className='block w-full bg-white px-4 py-3 text-left hover:bg-slate-100 hover:text-cyan-500'
@@ -66,6 +76,16 @@ export default function Header() {
               />
             </div>
             <div>Uyen Nguyen</div>
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              fill='none'
+              viewBox='0 0 24 24'
+              strokeWidth={1.5}
+              stroke='currentColor'
+              className='h-5 w-5'
+            >
+              <path strokeLinecap='round' strokeLinejoin='round' d='M19.5 8.25l-7.5 7.5-7.5-7.5' />
+            </svg>
           </Popover>
         </div>
         <div className='mt-4 grid grid-cols-12 items-end gap-4'>
@@ -102,23 +122,118 @@ export default function Header() {
               </button>
             </div>
           </form>
-          <div className='cols-span-1'>
-            <Link to='/' className=''>
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                fill='none'
-                viewBox='0 0 24 24'
-                strokeWidth={1.5}
-                stroke='currentColor'
-                className='h-8 w-8'
-              >
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  d='M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z'
-                />
-              </svg>
-            </Link>
+          <div className='col-span-1 justify-self-center'>
+            <Popover
+              placement='bottom-end'
+              className=''
+              renderPopover={
+                <div className='relative max-w-[400px] rounded-sm border border-t-0 border-gray-200 bg-white shadow-md'>
+                  <div className='p-2'>
+                    <div className='capitalize text-gray-400'>Sản phẩm mới thêm</div>
+                    <div className='mt-5'>
+                      <div className='mt-4 flex'>
+                        <div className='flex-shrink-0'>
+                          <img
+                            src='https://product.hstatic.net/1000230642/product/82ea49295c75932bca64_fb6f1517daaf46c399bd161d94c12ed7.jpg'
+                            alt='anh'
+                            className='h-11 w-11 object-cover'
+                          />
+                        </div>
+                        <div className='ml-2 flex-grow overflow-hidden'>
+                          <div className='truncate'>Giày thể thao Bitis cao cấp mẫu mới nhất</div>
+                        </div>
+                        <div className='ml-2 flex-shrink-0'>
+                          <span className='text-orange'>$98.000</span>
+                        </div>
+                      </div>
+                      <div className='mt-4 flex'>
+                        <div className='flex-shrink-0'>
+                          <img
+                            src='https://product.hstatic.net/1000230642/product/82ea49295c75932bca64_fb6f1517daaf46c399bd161d94c12ed7.jpg'
+                            alt='anh'
+                            className='h-11 w-11 object-cover'
+                          />
+                        </div>
+                        <div className='ml-2 flex-grow overflow-hidden'>
+                          <div className='truncate'>Giày thể thao Bitis cao cấp mẫu mới nhất</div>
+                        </div>
+                        <div className='ml-2 flex-shrink-0'>
+                          <span className='text-orange'>$98.000</span>
+                        </div>
+                      </div>{' '}
+                      <div className='mt-4 flex'>
+                        <div className='flex-shrink-0'>
+                          <img
+                            src='https://product.hstatic.net/1000230642/product/82ea49295c75932bca64_fb6f1517daaf46c399bd161d94c12ed7.jpg'
+                            alt='anh'
+                            className='h-11 w-11 object-cover'
+                          />
+                        </div>
+                        <div className='ml-2 flex-grow overflow-hidden'>
+                          <div className='truncate'>Giày thể thao Bitis cao cấp mẫu mới nhất</div>
+                        </div>
+                        <div className='ml-2 flex-shrink-0'>
+                          <span className='text-orange'>$98.000</span>
+                        </div>
+                      </div>{' '}
+                      <div className='mt-4 flex'>
+                        <div className='flex-shrink-0'>
+                          <img
+                            src='https://product.hstatic.net/1000230642/product/82ea49295c75932bca64_fb6f1517daaf46c399bd161d94c12ed7.jpg'
+                            alt='anh'
+                            className='h-11 w-11 object-cover'
+                          />
+                        </div>
+                        <div className='ml-2 flex-grow overflow-hidden'>
+                          <div className='truncate'>Giày thể thao Bitis cao cấp mẫu mới nhất</div>
+                        </div>
+                        <div className='ml-2 flex-shrink-0'>
+                          <span className='text-orange'>$98.000</span>
+                        </div>
+                      </div>
+                      <div className='mt-4 flex'>
+                        <div className='flex-shrink-0'>
+                          <img
+                            src='https://product.hstatic.net/1000230642/product/82ea49295c75932bca64_fb6f1517daaf46c399bd161d94c12ed7.jpg'
+                            alt='anh'
+                            className='h-11 w-11 object-cover'
+                          />
+                        </div>
+                        <div className='ml-2 flex-grow overflow-hidden'>
+                          <div className='truncate'>Giày thể thao Bitis cao cấp mẫu mới nhất</div>
+                        </div>
+                        <div className='ml-2 flex-shrink-0'>
+                          <span className='text-orange'>$98.000</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className='mt-6 flex items-center justify-between'>
+                      <div className='text-sm capitalize text-gray-500'>Thêm hàng vào giỏ</div>
+                      <button className='rounded-sm bg-orange px-4 py-2 capitalize text-white hover:bg-opacity-80'>
+                        Xem giỏ hàng
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              }
+            >
+              <Link to='/' className='items-center'>
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  fill='none'
+                  viewBox='0 0 24 24'
+                  strokeWidth={1.5}
+                  stroke='currentColor'
+                  className='h-8 w-8'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    d='M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z'
+                  />
+                </svg>
+              </Link>
+            </Popover>
           </div>
         </div>
       </div>
