@@ -10,6 +10,7 @@ import { isAxiosUnprocessableEntityError } from 'src/utils/utils'
 import { ErrorResponseApi } from 'src/types/utils.type'
 import { useContext } from 'react'
 import { AppContext } from 'src/contexts/app.context'
+import Button from 'src/components/Button/Button'
 
 type FormData = Schema
 export default function Register() {
@@ -25,6 +26,7 @@ export default function Register() {
   const registerAccountMutation = useMutation({
     mutationFn: (body: Omit<FormData, 'confirm_password'>) => registerAccount(body)
   })
+  console.log(registerAccountMutation, 'aaaaaaaa')
 
   const onSubmit = handleSubmit((data) => {
     const body = omit(data, ['confirm_password'])
@@ -60,7 +62,6 @@ export default function Register() {
           <div className='lg:col-span-2 lg:col-start-4'>
             <form className='rounded bg-white p-10 shadow-sm' onSubmit={onSubmit} noValidate>
               <div className='text-2xl'>Đăng Ký</div>
-
               <Input
                 name='email'
                 register={register}
@@ -89,9 +90,13 @@ export default function Register() {
                 autoComplete='on'
               />
               <div className='mt-3'>
-                <button className='w-full bg-red-500 px-2 py-4 text-center text-sm uppercase text-white hover:bg-red-600'>
+                <Button
+                  className='w-full bg-red-500 px-2 py-4 text-center text-sm uppercase text-white hover:bg-red-600'
+                  isLoading={registerAccountMutation.isLoading}
+                  disabled={registerAccountMutation.isLoading}
+                >
                   Đăng ký
-                </button>
+                </Button>
               </div>
               <div className='mt-8 flex items-center justify-center'>
                 <span className=' text-slate-400'>Bạn đã có tài khoản?</span>
