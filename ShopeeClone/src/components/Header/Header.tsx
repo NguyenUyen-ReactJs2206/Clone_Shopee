@@ -1,7 +1,21 @@
-import { Link } from 'react-router-dom'
+import { useMutation } from '@tanstack/react-query'
+import { Link, useNavigate } from 'react-router-dom'
 import Popover from '../Popover'
+import { logout } from 'src/apis/auth.api'
+import { useContext } from 'react'
+import { AppContext } from 'src/contexts/app.context'
 
 export default function Header() {
+  const { isAuthenticated, setIsAuthenticated } = useContext(AppContext)
+  const logoutMutation = useMutation({
+    mutationFn: logout,
+    onSuccess: () => {
+      setIsAuthenticated(false)
+    }
+  })
+  const handleLogout = () => {
+    logoutMutation.mutate()
+  }
   return (
     <div className='bg-[linear-gradient(-180deg,#f53d2d,#f63)] pb-5 pt-2 text-white'>
       <div className='container'>
@@ -45,48 +59,55 @@ export default function Header() {
               <path strokeLinecap='round' strokeLinejoin='round' d='M19.5 8.25l-7.5 7.5-7.5-7.5' />
             </svg>
           </Popover>
-
-          <Popover
-            className='ml-6 flex cursor-pointer items-center py-1 hover:text-gray-300'
-            renderPopover={
-              <div className='relative rounded-sm border border-t-0 border-gray-200 bg-white shadow-md'>
-                <Link
-                  to='/profile'
-                  className='block w-full bg-white px-4 py-3 text-left hover:bg-slate-100 hover:text-cyan-500'
-                >
-                  Tài khoản của tôi
-                </Link>
-                <Link
-                  to='/'
-                  className='block w-full bg-white px-4 py-3 text-left hover:bg-slate-100 hover:text-cyan-500'
-                >
-                  Đơn mua
-                </Link>
-                <button className='block w-full bg-white px-4 py-3 text-left hover:bg-slate-100 hover:text-cyan-500'>
-                  Đăng xuất
-                </button>
-              </div>
-            }
-          >
-            <div className='mr-2 h-6 w-6 flex-shrink-0'>
-              <img
-                src='https://haycafe.vn/wp-content/uploads/2021/11/Anh-avatar-dep-chat-lam-hinh-dai-dien.jpg'
-                alt='avatar'
-                className='h-full  w-full rounded-full object-cover'
-              />
-            </div>
-            <div>Uyen Nguyen</div>
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              fill='none'
-              viewBox='0 0 24 24'
-              strokeWidth={1.5}
-              stroke='currentColor'
-              className='h-5 w-5'
+          {isAuthenticated && (
+            <Popover
+              className='ml-6 flex cursor-pointer items-center py-1 hover:text-gray-300'
+              renderPopover={
+                <div className='relative rounded-sm border border-t-0 border-gray-200 bg-white shadow-md'>
+                  <Link
+                    to='/profile'
+                    className='block w-full bg-white px-4 py-3 text-left hover:bg-slate-100 hover:text-cyan-500'
+                  >
+                    Tài khoản của tôi
+                  </Link>
+                  <Link
+                    to='/'
+                    className='block w-full bg-white px-4 py-3 text-left hover:bg-slate-100 hover:text-cyan-500'
+                  >
+                    Đơn mua
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className='block w-full bg-white px-4 py-3 text-left hover:bg-slate-100 hover:text-cyan-500'
+                  >
+                    Đăng xuất
+                  </button>
+                </div>
+              }
             >
-              <path strokeLinecap='round' strokeLinejoin='round' d='M19.5 8.25l-7.5 7.5-7.5-7.5' />
-            </svg>
-          </Popover>
+              <div className='mr-2 h-6 w-6 flex-shrink-0'>
+                <img
+                  src='https://haycafe.vn/wp-content/uploads/2021/11/Anh-avatar-dep-chat-lam-hinh-dai-dien.jpg'
+                  alt='avatar'
+                  className='h-full  w-full rounded-full object-cover'
+                />
+              </div>
+              <div>Uyen Nguyen</div>
+            </Popover>
+          )}
+
+          {!isAuthenticated && (
+            <div className='flex items-center'>
+              <Link to='/register' className='mx-3 capitalize hover:text-white/70'>
+                Đăng ký
+              </Link>
+              <div className='h-4 border-r-[1px] border-white/40' />
+
+              <Link to='/login' className='mx-3 capitalize hover:text-white/70'>
+                Đăng nhập
+              </Link>
+            </div>
+          )}
         </div>
         <div className='mt-4 grid grid-cols-12 items-end gap-4'>
           <Link to='/' className='col-span-2'>

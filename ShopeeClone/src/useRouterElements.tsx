@@ -5,14 +5,17 @@ import Register from './pages/Register'
 import RegisterLayout from './Layout/RegisterLayout'
 import MainLayout from './Layout/MainLayout'
 import Profile from './pages/Profile'
+import { useContext } from 'react'
+import { AppContext } from './contexts/app.context'
 
 //Khi người dùng đã login rồi thì sẽ cho tiếp tục vào
-const isAuthenticated = false
 function ProtectedRoute() {
+  const { isAuthenticated } = useContext(AppContext)
   return isAuthenticated ? <Outlet /> : <Navigate to='/login' />
 }
 
 function RejectedRoute() {
+  const { isAuthenticated } = useContext(AppContext)
   return !isAuthenticated ? <Outlet /> : <Navigate to='/' />
 }
 
