@@ -7,6 +7,7 @@ import MainLayout from './Layout/MainLayout'
 import Profile from './pages/Profile'
 import { useContext } from 'react'
 import { AppContext } from './contexts/app.context'
+import path from './constants/path'
 
 //Khi người dùng đã login rồi thì sẽ cho tiếp tục vào
 function ProtectedRoute() {
@@ -22,7 +23,7 @@ function RejectedRoute() {
 export default function useRouterElements() {
   const routeElement = useRoutes([
     {
-      path: '/',
+      path: '',
       index: true,
       element: (
         <MainLayout>
@@ -35,7 +36,7 @@ export default function useRouterElements() {
       element: <ProtectedRoute />,
       children: [
         {
-          path: '/profile',
+          path: path.profile,
           element: (
             <MainLayout>
               <Profile />
@@ -49,7 +50,7 @@ export default function useRouterElements() {
       element: <RejectedRoute />,
       children: [
         {
-          path: '/login',
+          path: path.login,
           element: (
             <RegisterLayout>
               <Login />
@@ -57,7 +58,7 @@ export default function useRouterElements() {
           )
         },
         {
-          path: '/register',
+          path: path.register,
           element: (
             <RegisterLayout>
               <Register />
@@ -67,7 +68,7 @@ export default function useRouterElements() {
       ]
     },
     {
-      path: '/login',
+      path: path.login,
       element: (
         <RegisterLayout>
           <Login />
@@ -75,7 +76,7 @@ export default function useRouterElements() {
       )
     },
     {
-      path: '/register',
+      path: path.register,
       element: (
         <RegisterLayout>
           <Register />
