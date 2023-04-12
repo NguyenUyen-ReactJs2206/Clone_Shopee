@@ -16,7 +16,7 @@ export default function SortProductList() {
             Bán chạy
           </button>
           <select
-            value=''
+            defaultValue=''
             className='h-8  bg-white px-4 text-left text-sm  capitalize text-black outline-none hover:bg-slate-100'
           >
             <option value='' disabled className='bg-white text-black'>
