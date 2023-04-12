@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import Popover from '../Popover'
 import { logout } from 'src/apis/auth.api'
 import { useContext } from 'react'
