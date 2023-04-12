@@ -1,3 +1,4 @@
+import { useContext } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -5,12 +6,11 @@ import { useMutation } from '@tanstack/react-query'
 import { omit } from 'lodash'
 import { Schema, schema } from 'src/utils/rules'
 import Input from 'src/components/Input'
-import { registerAccount } from 'src/apis/auth.api'
 import { isAxiosUnprocessableEntityError } from 'src/utils/utils'
 import { ErrorResponseApi } from 'src/types/utils.type'
-import { useContext } from 'react'
 import { AppContext } from 'src/contexts/app.context'
 import Button from 'src/components/Button/Button'
+import authApi from 'src/apis/auth.api'
 
 type FormData = Schema
 export default function Register() {
@@ -24,7 +24,7 @@ export default function Register() {
   } = useForm<FormData>({ resolver: yupResolver(schema) })
 
   const registerAccountMutation = useMutation({
-    mutationFn: (body: Omit<FormData, 'confirm_password'>) => registerAccount(body)
+    mutationFn: (body: Omit<FormData, 'confirm_password'>) => authApi.registerAccount(body)
   })
   console.log(registerAccountMutation, 'aaaaaaaa')
 
