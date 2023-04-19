@@ -8,6 +8,7 @@ import Profile from './pages/Profile'
 import { useContext } from 'react'
 import { AppContext } from './contexts/app.context'
 import path from './constants/path'
+import ProductDetail from './pages/ProductDetail'
 
 //Khi người dùng đã login rồi thì sẽ cho tiếp tục vào
 function ProtectedRoute() {
@@ -22,29 +23,6 @@ function RejectedRoute() {
 
 export default function useRouterElements() {
   const routeElement = useRoutes([
-    {
-      path: '',
-      index: true,
-      element: (
-        <MainLayout>
-          <ProductList />
-        </MainLayout>
-      )
-    },
-    {
-      path: '',
-      element: <ProtectedRoute />,
-      children: [
-        {
-          path: path.profile,
-          element: (
-            <MainLayout>
-              <Profile />
-            </MainLayout>
-          )
-        }
-      ]
-    },
     {
       path: '',
       element: <RejectedRoute />,
@@ -82,6 +60,38 @@ export default function useRouterElements() {
           <Register />
         </RegisterLayout>
       )
+    },
+    {
+      path: '',
+      index: true,
+      element: (
+        <MainLayout>
+          <ProductList />
+        </MainLayout>
+      )
+    },
+    {
+      path: path.productDetail,
+      index: true,
+      element: (
+        <MainLayout>
+          <ProductDetail />
+        </MainLayout>
+      )
+    },
+    {
+      path: '',
+      element: <ProtectedRoute />,
+      children: [
+        {
+          path: path.profile,
+          element: (
+            <MainLayout>
+              <Profile />
+            </MainLayout>
+          )
+        }
+      ]
     }
   ])
   return routeElement
