@@ -17,7 +17,33 @@ export const schema = yup.object({
     .required('Nhập lại Password là bắc buộc')
     .min(6, 'Độ dài từ 6 - 160 ký tự')
     .max(160, 'Độ dài từ 6 - 160 ký tự')
-    .oneOf([yup.ref('password')], 'Nhập lại Password không khớp')
+    .oneOf([yup.ref('password')], 'Nhập lại Password không khớp'),
+  price_min: yup.string().test({
+    name: 'price-not-allowed',
+    message: 'Giá không phù hợp',
+    test: function (value) {
+      const price_min = value
+      //this.parent là gọi ra obj cha của thẳng price_min thì sẽ có price_mã
+      const { price_max } = this.parent as { price_min: string; price_max: string }
+      if (price_min !== '' && price_max !== '') {
+        return Number(price_min) <= Number(price_max)
+      }
+      return price_min !== '' || price_max !== ''
+    }
+  }),
+  price_max: yup.string().test({
+    name: 'price-not-allowed',
+    message: 'Giá không phù hợp',
+    test: function (value) {
+      const price_max = value
+      //this.parent là gọi ra obj cha của thẳng price_min thì sẽ có price_mã
+      const { price_min } = this.parent as { price_min: string; price_max: string }
+      if (price_min !== '' && price_max !== '') {
+        return Number(price_min) <= Number(price_max)
+      }
+      return price_min !== '' || price_max !== ''
+    }
+  })
 })
 //Loai bo confim_password ra khoi schema
 const loginSchema = schema.omit(['confirm_password'])
