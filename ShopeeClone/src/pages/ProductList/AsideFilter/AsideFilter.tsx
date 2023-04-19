@@ -62,6 +62,7 @@ export default function AsideFilter({ queryConfig, categories }: Props) {
       search: createSearchParams(omit(queryConfig, ['price_min', 'price_max', 'category', 'rating_filter'])).toString()
     })
   }
+
   return (
     <div className='py-4'>
       <Link
