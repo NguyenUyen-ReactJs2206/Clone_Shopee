@@ -56,12 +56,17 @@ export default function ProductDetail() {
 
     const image = imageRef.current as HTMLImageElement
     const { naturalHeight, naturalWidth } = image
-    const { offsetX, offsetY } = event.nativeEvent
+    // Cách 1: Lấy offsetX, offsetY đơn giản khi chúng ta đã xử lý được bubble event
+    // const { offsetX, offsetY } = event.nativeEvent
+
+    // Cách 2: Lấy offsetX, offsetY khi chúng ta không xử lý được bubble event
+    const offsetX = event.pageX - (rect.x + window.scrollX)
+    const offsetY = event.pageY - (rect.y + window.scrollY)
+
     const top = offsetY * (1 - naturalHeight / rect.height)
     const left = offsetX * (1 - naturalWidth / rect.width)
-    image.style.height = naturalHeight + 'px'
     image.style.width = naturalWidth + 'px'
-    //Reset maxWidth khi hover
+    image.style.height = naturalHeight + 'px'
     image.style.maxWidth = 'unset'
     image.style.top = top + 'px'
     image.style.left = left + 'px'
