@@ -1,10 +1,10 @@
 import { Link, createSearchParams, useNavigate } from 'react-router-dom'
-import { QueryConfig } from '../../ProductList'
 import { sortBy, order as orderConstant } from 'src/constants/product'
 import { ProductListConfig } from 'src/types/product.type'
 import classNames from 'classnames'
 import path from 'src/constants/path'
 import { omit } from 'lodash'
+import { QueryConfig } from 'src/hooks/useQueryConfig'
 
 interface Props {
   queryConfig: QueryConfig
@@ -22,6 +22,7 @@ export default function SortProductList({ queryConfig, pageSize }: Props) {
     navigate({
       pathname: path.home,
       search: createSearchParams(
+        //loại bỏ thằng order ra URL
         omit(
           {
             ...queryConfig,
