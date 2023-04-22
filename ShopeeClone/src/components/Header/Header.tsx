@@ -1,5 +1,5 @@
 import { useContext } from 'react'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { Link, createSearchParams, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import Popover from '../Popover'
@@ -10,6 +10,10 @@ import useQueryConfig from 'src/hooks/useQueryConfig'
 import { Schema, schema } from 'src/utils/rules'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { omit } from 'lodash'
+import { purchaseStatus } from 'src/constants/purchase'
+import purchaseApi from 'src/apis/purchase.api'
+import noproduct from '../../assets/images/no-product.png'
+import { formatCurrency } from 'src/utils/utils'
 
 type FormData = Pick<Schema, 'name'>
 
@@ -17,7 +21,7 @@ const nameSchema = schema.pick(['name'])
 
 export default function Header() {
   const queryConfig = useQueryConfig()
-  console.log(queryConfig, 'queryConfig')
+
   const { register, handleSubmit } = useForm<FormData>({
     defaultValues: {
       name: ''
@@ -35,6 +39,18 @@ export default function Header() {
       setProfile(null)
     }
   })
+  // Khi chung ta chuyen trang thi Header chi bi Re render
+  //Chu khong bi Unmount- mountingagain
+  //Tru truong hop Logout roi nhay sang RegisterLayout roi nhay vao lai
+  //Nen cac query nay se khong bi inactive=> khong van thiet phai set Stale: Infinity
+  const { data: purchasesInCartData } = useQuery({
+    queryKey: ['purchases', { status: purchaseStatus.inCart }],
+    queryFn: () => purchaseApi.getPurchases({ status: purchaseStatus.inCart })
+  })
+  console.log('dataaaaaaaaaaaa', purchasesInCartData)
+
+  const purchasesIncart = purchasesInCartData?.data.data
+
   const handleLogout = () => {
     logoutMutation.mutate()
   }
@@ -190,92 +206,41 @@ export default function Header() {
               placement='bottom-end'
               renderPopover={
                 <div className='relative max-w-[400px] rounded-sm border border-t-0 border-gray-200 bg-white shadow-md'>
-                  <div className='p-2'>
-                    <div className='capitalize text-gray-400'>Sản phẩm mới thêm</div>
-                    <div className='mt-5'>
-                      <div className='mt-4 flex'>
-                        <div className='flex-shrink-0'>
-                          <img
-                            src='https://product.hstatic.net/1000230642/product/82ea49295c75932bca64_fb6f1517daaf46c399bd161d94c12ed7.jpg'
-                            alt='anh'
-                            className='h-11 w-11 object-cover'
-                          />
-                        </div>
-                        <div className='ml-2 flex-grow overflow-hidden'>
-                          <div className='truncate'>Giày thể thao Bitis cao cấp mẫu mới nhất</div>
-                        </div>
-                        <div className='ml-2 flex-shrink-0'>
-                          <span className='text-orange'>$98.000</span>
-                        </div>
+                  {purchasesIncart ? (
+                    <div className='p-2'>
+                      <div className='capitalize text-gray-400'>Sản phẩm mới thêm</div>
+                      <div className='mt-5'>
+                        {purchasesIncart.map((purchase) => (
+                          <div className='mt-4 flex' key={purchase._id}>
+                            <div className='flex-shrink-0'>
+                              <img
+                                src={purchase.product.image}
+                                alt={purchase.product.name}
+                                className='h-11 w-11 object-cover'
+                              />
+                            </div>
+                            <div className='ml-2 flex-grow overflow-hidden'>
+                              <div className='truncate'>{purchase.product.name}</div>
+                            </div>
+                            <div className='ml-2 flex-shrink-0'>
+                              <span className='text-orange'>₫{formatCurrency(purchase.product.price)}</span>
+                            </div>
+                          </div>
+                        ))}
                       </div>
-                      <div className='mt-4 flex'>
-                        <div className='flex-shrink-0'>
-                          <img
-                            src='https://product.hstatic.net/1000230642/product/82ea49295c75932bca64_fb6f1517daaf46c399bd161d94c12ed7.jpg'
-                            alt='anh'
-                            className='h-11 w-11 object-cover'
-                          />
-                        </div>
-                        <div className='ml-2 flex-grow overflow-hidden'>
-                          <div className='truncate'>Giày thể thao Bitis cao cấp mẫu mới nhất</div>
-                        </div>
-                        <div className='ml-2 flex-shrink-0'>
-                          <span className='text-orange'>$98.000</span>
-                        </div>
-                      </div>{' '}
-                      <div className='mt-4 flex'>
-                        <div className='flex-shrink-0'>
-                          <img
-                            src='https://product.hstatic.net/1000230642/product/82ea49295c75932bca64_fb6f1517daaf46c399bd161d94c12ed7.jpg'
-                            alt='anh'
-                            className='h-11 w-11 object-cover'
-                          />
-                        </div>
-                        <div className='ml-2 flex-grow overflow-hidden'>
-                          <div className='truncate'>Giày thể thao Bitis cao cấp mẫu mới nhất</div>
-                        </div>
-                        <div className='ml-2 flex-shrink-0'>
-                          <span className='text-orange'>$98.000</span>
-                        </div>
-                      </div>{' '}
-                      <div className='mt-4 flex'>
-                        <div className='flex-shrink-0'>
-                          <img
-                            src='https://product.hstatic.net/1000230642/product/82ea49295c75932bca64_fb6f1517daaf46c399bd161d94c12ed7.jpg'
-                            alt='anh'
-                            className='h-11 w-11 object-cover'
-                          />
-                        </div>
-                        <div className='ml-2 flex-grow overflow-hidden'>
-                          <div className='truncate'>Giày thể thao Bitis cao cấp mẫu mới nhất</div>
-                        </div>
-                        <div className='ml-2 flex-shrink-0'>
-                          <span className='text-orange'>$98.000</span>
-                        </div>
-                      </div>
-                      <div className='mt-4 flex'>
-                        <div className='flex-shrink-0'>
-                          <img
-                            src='https://product.hstatic.net/1000230642/product/82ea49295c75932bca64_fb6f1517daaf46c399bd161d94c12ed7.jpg'
-                            alt='anh'
-                            className='h-11 w-11 object-cover'
-                          />
-                        </div>
-                        <div className='ml-2 flex-grow overflow-hidden'>
-                          <div className='truncate'>Giày thể thao Bitis cao cấp mẫu mới nhất</div>
-                        </div>
-                        <div className='ml-2 flex-shrink-0'>
-                          <span className='text-orange'>$98.000</span>
-                        </div>
+                      <div className='mt-6 flex items-center justify-between'>
+                        <div className='text-sm capitalize text-gray-500'>Thêm hàng vào giỏ</div>
+                        <button className='rounded-sm bg-orange px-4 py-2 capitalize text-white hover:bg-opacity-80'>
+                          Xem giỏ hàng
+                        </button>
                       </div>
                     </div>
-                    <div className='mt-6 flex items-center justify-between'>
-                      <div className='text-sm capitalize text-gray-500'>Thêm hàng vào giỏ</div>
-                      <button className='rounded-sm bg-orange px-4 py-2 capitalize text-white hover:bg-opacity-80'>
-                        Xem giỏ hàng
-                      </button>
+                  ) : (
+                    <div className='p-2'>
+                      <img src={noproduct} alt='no purchase' />
                     </div>
-                  </div>
+                  )}
+                  \
                 </div>
               }
             >
