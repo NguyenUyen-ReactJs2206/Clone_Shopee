@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import DOMPurify from 'dompurify'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
@@ -10,7 +10,6 @@ import { formatCurrency, formatNumberToSocialStyle, getIdFromNameId, rateSale } 
 import Product from '../ProductList/components/Product'
 import QuantityController from 'src/components/QuantityController'
 import purchaseApi from 'src/apis/purchase.api'
-import { queryClient } from 'src/main'
 import { purchasesStatus } from 'src/constants/purchase'
 
 export default function ProductDetail() {
@@ -100,6 +99,7 @@ export default function ProductDetail() {
     setBuyCount(value)
   }
 
+  const queryClient = useQueryClient()
   const addToCart = () => {
     addToCartMutation.mutate(
       { buy_count: buyCount, product_id: product?._id as string },
