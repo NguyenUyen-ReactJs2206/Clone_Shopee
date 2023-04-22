@@ -10,7 +10,7 @@ import useQueryConfig from 'src/hooks/useQueryConfig'
 import { Schema, schema } from 'src/utils/rules'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { omit } from 'lodash'
-import { purchaseStatus } from 'src/constants/purchase'
+import { purchasesStatus } from 'src/constants/purchase'
 import purchaseApi from 'src/apis/purchase.api'
 import noproduct from '../../assets/images/no-product.png'
 import { formatCurrency } from 'src/utils/utils'
@@ -18,7 +18,7 @@ import { formatCurrency } from 'src/utils/utils'
 type FormData = Pick<Schema, 'name'>
 
 const nameSchema = schema.pick(['name'])
-
+const MAX_PURCHASES = 5
 export default function Header() {
   const queryConfig = useQueryConfig()
 
@@ -44,8 +44,8 @@ export default function Header() {
   //Tru truong hop Logout roi nhay sang RegisterLayout roi nhay vao lai
   //Nen cac query nay se khong bi inactive=> khong van thiet phai set Stale: Infinity
   const { data: purchasesInCartData } = useQuery({
-    queryKey: ['purchases', { status: purchaseStatus.inCart }],
-    queryFn: () => purchaseApi.getPurchases({ status: purchaseStatus.inCart })
+    queryKey: ['purchases', { status: purchasesStatus.inCart }],
+    queryFn: () => purchaseApi.getPurchases({ status: purchasesStatus.inCart })
   })
   console.log('dataaaaaaaaaaaa', purchasesInCartData)
 
@@ -210,8 +210,8 @@ export default function Header() {
                     <div className='p-2'>
                       <div className='capitalize text-gray-400'>Sản phẩm mới thêm</div>
                       <div className='mt-5'>
-                        {purchasesIncart.map((purchase) => (
-                          <div className='mt-4 flex' key={purchase._id}>
+                        {purchasesIncart.slice(0, MAX_PURCHASES).map((purchase) => (
+                          <div className='mt-2 flex py-2 hover:bg-gray-100' key={purchase._id}>
                             <div className='flex-shrink-0'>
                               <img
                                 src={purchase.product.image}
@@ -229,22 +229,25 @@ export default function Header() {
                         ))}
                       </div>
                       <div className='mt-6 flex items-center justify-between'>
-                        <div className='text-sm capitalize text-gray-500'>Thêm hàng vào giỏ</div>
+                        <div className='text-sm capitalize text-gray-500'>
+                          {purchasesIncart.length > MAX_PURCHASES ? purchasesIncart.length - MAX_PURCHASES : ''} Thêm
+                          hàng vào giỏ
+                        </div>
                         <button className='rounded-sm bg-orange px-4 py-2 capitalize text-white hover:bg-opacity-80'>
                           Xem giỏ hàng
                         </button>
                       </div>
                     </div>
                   ) : (
-                    <div className='p-2'>
-                      <img src={noproduct} alt='no purchase' />
+                    <div className='flex h-[300px] w-[300px] flex-col items-center justify-center p-2'>
+                      <img src={noproduct} alt='no purchase' className='h-24 w-24' />
+                      <div className='mt-3 capitalize'>Chưa có sản phẩm</div>
                     </div>
                   )}
-                  \
                 </div>
               }
             >
-              <Link to='/' className='items-center'>
+              <Link to='/' className='relative'>
                 <svg
                   xmlns='http://www.w3.org/2000/svg'
                   fill='none'
@@ -259,6 +262,9 @@ export default function Header() {
                     d='M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z'
                   />
                 </svg>
+                <span className='absolute left-[17px] top-[-5px] rounded-full bg-white px-[9px] py-[1px] text-xs text-orange'>
+                  {purchasesIncart?.length}
+                </span>
               </Link>
             </Popover>
           </div>

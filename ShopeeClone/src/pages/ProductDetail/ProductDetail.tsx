@@ -3,6 +3,7 @@ import DOMPurify from 'dompurify'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import productApi from 'src/apis/product.api'
+import { toast } from 'react-toastify'
 import ProductRating from 'src/components/ProductRating'
 import { Product as ProductType, ProductListConfig } from 'src/types/product.type'
 import { formatCurrency, formatNumberToSocialStyle, getIdFromNameId, rateSale } from 'src/utils/utils'
@@ -10,7 +11,7 @@ import Product from '../ProductList/components/Product'
 import QuantityController from 'src/components/QuantityController'
 import purchaseApi from 'src/apis/purchase.api'
 import { queryClient } from 'src/main'
-import { purchaseStatus } from 'src/constants/purchase'
+import { purchasesStatus } from 'src/constants/purchase'
 
 export default function ProductDetail() {
   const [buyCount, setBuyCount] = useState(1)
@@ -104,9 +105,12 @@ export default function ProductDetail() {
       { buy_count: buyCount, product_id: product?._id as string },
       //invalidate query: lam query ko con dung nua, sau do fetch lai API
       {
-        onSuccess: () => {
+        onSuccess: (data) => {
+          toast.success(data.data.message, {
+            autoClose: 1000
+          })
           queryClient.invalidateQueries({
-            queryKey: ['purchases', { status: purchaseStatus.inCart }]
+            queryKey: ['purchases', { status: purchasesStatus.inCart }]
           })
         }
       }

@@ -1,4 +1,4 @@
-export const purchaseStatus = {
+export const purchasesStatus = {
   //trong gio hang
   inCart: -1,
   all: 0,
