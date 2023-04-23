@@ -23,7 +23,7 @@ const priceSchema = schema.pick(['price_max', 'price_min'])
 
 export default function AsideFilter({ queryConfig, categories }: Props) {
   const { category } = queryConfig
-  console.log(category, categories)
+
   const {
     control,
     handleSubmit,
