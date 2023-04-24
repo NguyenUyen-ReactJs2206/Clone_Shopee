@@ -11,6 +11,7 @@ import { NoUndefinedField } from 'src/types/utils.type'
 import RatingStars from 'src/pages/ProductList/components/RatingStars'
 import { omit } from 'lodash'
 import { QueryConfig } from 'src/hooks/useQueryConfig'
+import InputV2 from 'src/components/InputV2'
 
 interface Props {
   queryConfig: QueryConfig
@@ -166,7 +167,7 @@ export default function AsideFilter({ queryConfig, categories }: Props) {
             />
 
             <div className='mx-2 mt-1 shrink-0'>-</div>
-            <Controller
+            {/* <Controller
               control={control}
               name='price_max'
               render={({ field }) => {
@@ -187,6 +188,19 @@ export default function AsideFilter({ queryConfig, categories }: Props) {
                     classNameError='hidden'
                   />
                 )
+              }}
+            /> */}
+
+            <InputV2
+              control={control}
+              name='price_max'
+              type='number'
+              className='grow'
+              classNameInput='w-full rounded-sm border border-gray-300 p-1 outline-none focus:border-gray-500 focus:shadow-sm'
+              placeholder='₫ ĐẾN'
+              classNameError='hidden'
+              onChange={(event) => {
+                trigger('price_min')
               }}
             />
           </div>
