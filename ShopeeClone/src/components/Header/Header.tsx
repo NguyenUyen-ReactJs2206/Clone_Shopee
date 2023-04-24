@@ -238,9 +238,12 @@ export default function Header() {
                           {purchasesIncart.length > MAX_PURCHASES ? purchasesIncart.length - MAX_PURCHASES : ''} Thêm
                           hàng vào giỏ
                         </div>
-                        <button className='rounded-sm bg-orange px-4 py-2 capitalize text-white hover:bg-opacity-80'>
+                        <Link
+                          to={path.cart}
+                          className='rounded-sm bg-orange px-4 py-2 capitalize text-white hover:bg-opacity-80'
+                        >
                           Xem giỏ hàng
-                        </button>
+                        </Link>
                       </div>
                     </div>
                   ) : (
