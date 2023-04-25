@@ -52,7 +52,6 @@ export default function Header() {
     //Khong Call Api purchase khi Logout
     enabled: isAuthenticated
   })
-  console.log('dataaaaaaaaaaaa', purchasesInCartData)
 
   const purchasesIncart = purchasesInCartData?.data.data
 
