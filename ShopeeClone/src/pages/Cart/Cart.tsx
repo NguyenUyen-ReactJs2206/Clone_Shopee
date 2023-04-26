@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
 import purchaseApi from 'src/apis/purchase.api'
+import Button from 'src/components/Button/Button'
 import QuantityController from 'src/components/QuantityController'
 import path from 'src/constants/path'
 import { purchasesStatus } from 'src/constants/purchase'
@@ -40,7 +41,7 @@ export default function Cart() {
             <div className='my-3 rounded-sm bg-white p-5 shadow'>
               {purchasesIncart?.map((purchase) => (
                 <div
-                  className='text-cneter grid grid-cols-12 rounded-sm border border-gray-200 bg-white px-4 py-5 text-sm text-gray-500'
+                  className='mt-5 grid grid-cols-12 rounded-sm border border-gray-200 bg-white px-4 py-5 text-center text-sm text-gray-500 first:mt-0'
                   key={purchase._id}
                 >
                   <div className='col-span-6'>
@@ -104,6 +105,31 @@ export default function Cart() {
                 </div>
               ))}
             </div>
+          </div>
+        </div>
+        <div className='sticky bottom-0 z-10 mt-8 flex flex-col rounded-sm border-gray-100 bg-white p-5 shadow sm:flex-row sm:items-center'>
+          <div className='flex items-center'>
+            <div className='flex flex-shrink-0 items-center justify-center pr-3'>
+              <input type='checkbox' className='h-5 w-5 accent-orange' />
+            </div>
+            <button className='mx-3 border-none bg-none'>Chọn tất cả</button>
+            <button className='mx-3 border-none bg-none'>Xóa</button>
+          </div>
+
+          <div className='mt-5 flex flex-col  sm:ml-auto sm:mt-0 sm:flex-row sm:items-center'>
+            <div>
+              <div className='flex items-center sm:justify-end'>
+                <div>Tổng thanh toán (0 sản phẩm):</div>
+                <div className='ml-2 text-2xl text-orange'>₫138000</div>
+              </div>
+              <div className='flex items-center text-sm sm:justify-end'>
+                <div className='text-gray-500'>Tiết kiệm</div>
+                <div className='ml-6 text-orange'>₫138000</div>
+              </div>
+            </div>
+            <Button className='mt-5 flex h-10 w-52 items-center justify-center bg-red-500 text-center text-sm uppercase text-white hover:bg-red-600 sm:ml-4 sm:mt-0 '>
+              Mua hàng
+            </Button>
           </div>
         </div>
       </div>
