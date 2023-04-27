@@ -1,5 +1,6 @@
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { produce } from 'immer'
+import { keyBy, max } from 'lodash'
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import purchaseApi from 'src/apis/purchase.api'
@@ -16,32 +17,45 @@ export interface ExtendedPurchase extends Purchase {
 }
 export default function Cart() {
   const [extendedPurchase, setExtendedPurchase] = useState<ExtendedPurchase[]>([])
-  const { data: purchasesInCartData } = useQuery({
+  const { data: purchasesInCartData, refetch } = useQuery({
     queryKey: ['purchases', { status: purchasesStatus.inCart }],
     queryFn: () => purchaseApi.getPurchases({ status: purchasesStatus.inCart })
   })
 
+  const updatePurchaseMutation = useMutation({
+    mutationFn: purchaseApi.updatePurchase,
+    //Khi goi thanh cong thi se refetch lai APi
+    onSuccess: () => {
+      refetch()
+    }
+  })
   const purchasesIncart = purchasesInCartData?.data.data
   //de biet duoc no da duoc chon tat ca hay chua
   //every yeu cau tat ca phai la true
   const isAllChecked = extendedPurchase.every((purchase) => purchase.checked)
 
   useEffect(() => {
-    setExtendedPurchase(
-      purchasesIncart?.map((purchase) => ({
-        ...purchase,
-        disabled: false,
-        checked: false
-      })) || []
-    )
+    setExtendedPurchase((prev) => {
+      const extendedPurchasesObject = keyBy(prev, '_id')
+      console.log('extendedPurchasesObject', extendedPurchasesObject)
+
+      return (
+        purchasesIncart?.map((purchase) => ({
+          ...purchase,
+          disabled: false,
+          checked: Boolean(extendedPurchasesObject[purchase._id]?.checked)
+        })) || []
+      )
+    })
   }, [purchasesIncart])
+
   console.log('dataaaaaaaaaaaa', purchasesIncart)
   //C1: dung ham map de tim ra vitri index roi set lai state
   //C2: dung thu vien immer js de change state
-  const handleCheck = (productIndex: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleCheck = (purchaseIndex: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
     setExtendedPurchase(
       produce((draft) => {
-        draft[productIndex].checked = event.target.checked
+        draft[purchaseIndex].checked = event.target.checked
       })
     )
   }
@@ -54,6 +68,19 @@ export default function Cart() {
       }))
     )
   }
+
+  const handleQuantity = (purchaseIndex: number, value: number, enable: boolean) => {
+    if (enable) {
+      const purchase = extendedPurchase[purchaseIndex]
+      setExtendedPurchase(
+        produce((draft) => {
+          draft[purchaseIndex].disabled = true
+        })
+      )
+      updatePurchaseMutation.mutate({ product_id: purchase.product._id, buy_count: value })
+    }
+  }
+
   return (
     <div className='bg-neutral-100 py-16'>
       <div className='container'>
@@ -139,6 +166,9 @@ export default function Cart() {
                           max={purchase.product.quantity}
                           value={purchase.buy_count}
                           classNameWrapper='flex items-center'
+                          onIncrease={(value) => handleQuantity(index, value, value <= purchase.product.quantity)}
+                          onDecrease={(value) => handleQuantity(index, value, value >= 1)}
+                          disabled={purchase.disabled}
                         />
                       </div>
                       <div className='col-span-1'>
