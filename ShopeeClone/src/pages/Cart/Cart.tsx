@@ -29,10 +29,27 @@ export default function Cart() {
       refetch()
     }
   })
+
+  const buyProductsMutation = useMutation({
+    mutationFn: purchaseApi.buyProducts,
+    onSuccess: () => {
+      refetch()
+    }
+  })
+
+  const deletePurchaseMutation = useMutation({
+    mutationFn: purchaseApi.deletePurchase,
+    onSuccess: () => {
+      refetch()
+    }
+  })
+
   const purchasesIncart = purchasesInCartData?.data.data
   //de biet duoc no da duoc chon tat ca hay chua
   //every yeu cau tat ca phai la true
   const isAllChecked = extendedPurchase.every((purchase) => purchase.checked)
+  const checkedPurchases = extendedPurchase.filter((purchase) => purchase.checked)
+  const checkedPurchasesCount = checkedPurchases.length
 
   useEffect(() => {
     setExtendedPurchase((prev) => {
@@ -88,6 +105,16 @@ export default function Cart() {
       })
     )
   }
+
+  const handleDelete = (purchaseIndex: number) => () => {
+    const purchaseId = extendedPurchase[purchaseIndex]._id
+    deletePurchaseMutation.mutate([purchaseId])
+  }
+
+  const handleDeleteManyPurchases = () => {
+    const purchaseIds = checkedPurchases.map((purchase) => purchase._id)
+    deletePurchaseMutation.mutate(purchaseIds)
+  }
   return (
     <div className='bg-neutral-100 py-16'>
       <div className='container'>
@@ -119,7 +146,7 @@ export default function Cart() {
             <div className='my-3 rounded-sm bg-white p-5 shadow'>
               {extendedPurchase?.map((purchase, index) => (
                 <div
-                  className='mt-5 grid grid-cols-12 rounded-sm border border-gray-200 bg-white px-4 py-5 text-center text-sm text-gray-500 first:mt-0'
+                  className='mb-5 grid grid-cols-12 items-center rounded-sm border border-gray-200 bg-white px-4 py-5 text-center text-sm text-gray-500 first:mt-0'
                   key={purchase._id}
                 >
                   <div className='col-span-6'>
@@ -194,7 +221,12 @@ export default function Cart() {
                         </span>
                       </div>
                       <div className='col-span-1 '>
-                        <button className='bg-none text-black transition-colors hover:text-orange'>Xóa</button>
+                        <button
+                          className='bg-none text-black transition-colors hover:text-orange'
+                          onClick={handleDelete(index)}
+                        >
+                          Xóa
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -211,7 +243,9 @@ export default function Cart() {
             <button className='mx-3 border-none bg-none' onClick={handleCheckAll}>
               Chọn tất cả ({extendedPurchase.length})
             </button>
-            <button className='mx-3 border-none bg-none'>Xóa</button>
+            <button className='mx-3 border-none bg-none' onClick={handleDeleteManyPurchases}>
+              Xóa
+            </button>
           </div>
 
           <div className='mt-5 flex flex-col  sm:ml-auto sm:mt-0 sm:flex-row sm:items-center'>
