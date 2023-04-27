@@ -81,6 +81,13 @@ export default function Cart() {
     }
   }
 
+  const handleTypeQuantity = (purchaseIndex: number) => (value: number) => {
+    setExtendedPurchase(
+      produce((draft) => {
+        draft[purchaseIndex].buy_count = value
+      })
+    )
+  }
   return (
     <div className='bg-neutral-100 py-16'>
       <div className='container'>
@@ -168,6 +175,16 @@ export default function Cart() {
                           classNameWrapper='flex items-center'
                           onIncrease={(value) => handleQuantity(index, value, value <= purchase.product.quantity)}
                           onDecrease={(value) => handleQuantity(index, value, value >= 1)}
+                          onType={handleTypeQuantity(index)}
+                          onFocusOut={(value) =>
+                            handleQuantity(
+                              index,
+                              value,
+                              value >= 1 &&
+                                value <= purchase.product.quantity &&
+                                value !== (purchasesIncart as Purchase[])[index].buy_count
+                            )
+                          }
                           disabled={purchase.disabled}
                         />
                       </div>
