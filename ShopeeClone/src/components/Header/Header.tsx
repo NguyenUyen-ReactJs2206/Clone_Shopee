@@ -1,37 +1,20 @@
 import { useContext } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { Link, createSearchParams, useNavigate } from 'react-router-dom'
-import { useForm } from 'react-hook-form'
+import { Link } from 'react-router-dom'
 import Popover from '../Popover'
 import { AppContext } from 'src/contexts/app.context'
 import path from 'src/constants/path'
-import useQueryConfig from 'src/hooks/useQueryConfig'
-import { Schema, schema } from 'src/utils/rules'
-import { yupResolver } from '@hookform/resolvers/yup'
-import { omit } from 'lodash'
 import { purchasesStatus } from 'src/constants/purchase'
 import purchaseApi from 'src/apis/purchase.api'
 import noproduct from '../../assets/images/no-product.png'
 import { formatCurrency } from 'src/utils/utils'
 import NavHeader from '../NavHeader'
+import useSearchProducts from 'src/hooks/useSearchProducts'
 
-type FormData = Pick<Schema, 'name'>
-
-const nameSchema = schema.pick(['name'])
 const MAX_PURCHASES = 5
 export default function Header() {
-  const queryConfig = useQueryConfig()
-
-  const { register, handleSubmit } = useForm<FormData>({
-    defaultValues: {
-      name: ''
-    },
-    resolver: yupResolver(nameSchema)
-  })
-
-  const navigate = useNavigate()
-
   const { isAuthenticated } = useContext(AppContext)
+  const { onSubmitSearch, register } = useSearchProducts()
 
   // Khi chung ta chuyen trang thi Header chi bi Re render
   //Chu khong bi Unmount- mountingagain
@@ -46,25 +29,6 @@ export default function Header() {
 
   const purchasesIncart = purchasesInCartData?.data.data
 
-  const onSubmitSearch = handleSubmit((data) => {
-    const config = queryConfig.order
-      ? omit(
-          {
-            ...queryConfig,
-            name: data.name
-          },
-          ['order', 'sort_by']
-        )
-      : {
-          ...queryConfig,
-          name: data.name
-        }
-
-    navigate({
-      pathname: path.home,
-      search: createSearchParams(config).toString()
-    })
-  })
   return (
     <div className='bg-[linear-gradient(-180deg,#f53d2d,#f63)] pb-5 pt-2 text-white'>
       <div className='container'>
