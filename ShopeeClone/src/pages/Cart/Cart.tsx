@@ -2,7 +2,7 @@ import { useMutation, useQuery } from '@tanstack/react-query'
 import { produce } from 'immer'
 import { keyBy } from 'lodash'
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import purchaseApi from 'src/apis/purchase.api'
 import Button from 'src/components/Button/Button'
 import QuantityController from 'src/components/QuantityController'
@@ -49,6 +49,9 @@ export default function Cart() {
     }
   })
 
+  const location = useLocation()
+  const choosenPurchaseIdFromLocation = (location.state as { purchaseId: string } | null)?.purchaseId
+
   const purchasesIncart = purchasesInCartData?.data.data
   //de biet duoc no da duoc chon tat ca hay chua
   //every yeu cau tat ca phai la true
@@ -66,18 +69,25 @@ export default function Cart() {
   useEffect(() => {
     setExtendedPurchase((prev) => {
       const extendedPurchasesObject = keyBy(prev, '_id')
-      console.log('extendedPurchasesObject', extendedPurchasesObject)
 
       return (
-        purchasesIncart?.map((purchase) => ({
-          ...purchase,
-          disabled: false,
-          checked: Boolean(extendedPurchasesObject[purchase._id]?.checked)
-        })) || []
+        purchasesIncart?.map((purchase) => {
+          const isChoosenPurchaseIdFromLocation = choosenPurchaseIdFromLocation === purchase._id
+          return {
+            ...purchase,
+            disabled: false,
+            checked: isChoosenPurchaseIdFromLocation || Boolean(extendedPurchasesObject[purchase._id]?.checked)
+          }
+        }) || []
       )
     })
-  }, [purchasesIncart])
+  }, [purchasesIncart, choosenPurchaseIdFromLocation])
 
+  useEffect(() => {
+    return () => {
+      history.replaceState(null, '')
+    }
+  })
   console.log('dataaaaaaaaaaaa', purchasesIncart)
   //C1: dung ham map de tim ra vitri index roi set lai state
   //C2: dung thu vien immer js de change state
