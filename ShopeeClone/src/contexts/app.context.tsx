@@ -1,4 +1,5 @@
 import { createContext, useState } from 'react'
+import { ExtendedPurchase } from 'src/types/purchase.type'
 import { User } from 'src/types/user.type'
 import { getAccessTokenFromLocalStorage, getProfileFromLocalStorage } from 'src/utils/auth'
 
@@ -7,18 +8,23 @@ interface AppConTextInterface {
   setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>
   profile: User | null
   setProfile: React.Dispatch<React.SetStateAction<User | null>>
+  extendedPurchase: ExtendedPurchase[]
+  setExtendedPurchase: React.Dispatch<React.SetStateAction<ExtendedPurchase[]>>
 }
 
 const initialAppContext: AppConTextInterface = {
   isAuthenticated: Boolean(getAccessTokenFromLocalStorage()),
   setIsAuthenticated: () => null,
   profile: getProfileFromLocalStorage(),
-  setProfile: () => null
+  setProfile: () => null,
+  extendedPurchase: [],
+  setExtendedPurchase: () => null
 }
 
 export const AppContext = createContext<AppConTextInterface>(initialAppContext)
 
 export const AppProvider = ({ children }: { children: React.ReactNode }) => {
+  const [extendedPurchase, setExtendedPurchase] = useState<ExtendedPurchase[]>(initialAppContext.extendedPurchase)
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(initialAppContext.isAuthenticated)
   const [profile, setProfile] = useState<User | null>(initialAppContext.profile)
   return (
@@ -27,7 +33,9 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
         isAuthenticated,
         setIsAuthenticated,
         profile,
-        setProfile
+        setProfile,
+        extendedPurchase,
+        setExtendedPurchase
       }}
     >
       {children}
