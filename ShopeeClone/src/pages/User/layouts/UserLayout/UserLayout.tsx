@@ -1,14 +1,11 @@
+import { Outlet } from 'react-router-dom'
 import UserSideNav from '../../components/UserSideNav'
 
-interface Props {
-  children?: React.ReactNode
-}
-
-export default function UserLayout({ children }: Props) {
+export default function UserLayout() {
   return (
     <div>
       <UserSideNav />
-      {children}
+      <Outlet />
     </div>
   )
 }

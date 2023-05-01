@@ -97,26 +97,19 @@ export default function useRouterElements() {
         },
         {
           path: path.user,
+          element: (
+            <MainLayout>
+              <UserLayout />
+            </MainLayout>
+          ),
           children: [
             {
               path: path.profile,
-              element: (
-                <MainLayout>
-                  <UserLayout>
-                    <Profile />
-                  </UserLayout>
-                </MainLayout>
-              )
+              element: <Profile />
             },
             {
               path: path.profile,
-              element: (
-                <MainLayout>
-                  <UserLayout>
-                    <ChangePassword />
-                  </UserLayout>
-                </MainLayout>
-              )
+              element: <ChangePassword />
             }
           ]
         }
