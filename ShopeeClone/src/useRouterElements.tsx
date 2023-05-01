@@ -13,6 +13,7 @@ import Cart from './pages/Cart'
 import CartLayout from './Layout/CartLayout'
 import UserLayout from './pages/User/layouts/UserLayout'
 import ChangePassword from './pages/User/pages/ChangePassword'
+import HistoryPurchase from './pages/User/pages/HistoryPurchase'
 
 //Khi người dùng đã login rồi thì sẽ cho tiếp tục vào
 function ProtectedRoute() {
@@ -108,8 +109,12 @@ export default function useRouterElements() {
               element: <Profile />
             },
             {
-              path: path.profile,
+              path: path.changePassword,
               element: <ChangePassword />
+            },
+            {
+              path: path.historyPurchase,
+              element: <HistoryPurchase />
             }
           ]
         }
