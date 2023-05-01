@@ -11,6 +11,8 @@ import path from './constants/path'
 import ProductDetail from './pages/ProductDetail'
 import Cart from './pages/Cart'
 import CartLayout from './Layout/CartLayout'
+import UserLayout from './pages/User/layouts/UserLayout'
+import ChangePassword from './pages/User/pages/ChangePassword'
 
 //Khi người dùng đã login rồi thì sẽ cho tiếp tục vào
 function ProtectedRoute() {
@@ -86,20 +88,37 @@ export default function useRouterElements() {
       element: <ProtectedRoute />,
       children: [
         {
-          path: path.profile,
-          element: (
-            <MainLayout>
-              <Profile />
-            </MainLayout>
-          )
-        },
-        {
           path: path.cart,
           element: (
             <CartLayout>
               <Cart />
             </CartLayout>
           )
+        },
+        {
+          path: path.user,
+          children: [
+            {
+              path: path.profile,
+              element: (
+                <MainLayout>
+                  <UserLayout>
+                    <Profile />
+                  </UserLayout>
+                </MainLayout>
+              )
+            },
+            {
+              path: path.profile,
+              element: (
+                <MainLayout>
+                  <UserLayout>
+                    <ChangePassword />
+                  </UserLayout>
+                </MainLayout>
+              )
+            }
+          ]
         }
       ]
     }
