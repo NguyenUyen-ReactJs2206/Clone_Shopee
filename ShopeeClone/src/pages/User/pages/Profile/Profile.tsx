@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import userApi from 'src/apis/user.api'
@@ -7,6 +7,7 @@ import Button from 'src/components/Button/Button'
 import Input from 'src/components/Input'
 import InputNumber from 'src/components/InputNumber'
 import { UserSchema, userSchema } from 'src/utils/rules'
+import DateSelect from '../../components/DateSelect'
 
 type FormData = Pick<UserSchema, 'name' | 'address' | 'phone' | 'date_of_birth' | 'avatar'>
 
@@ -38,8 +39,8 @@ export default function Profile() {
   })
 
   const profile = profileData?.data.data
-  console.log(profile, 'profile')
 
+  const updateProfileMutation = useMutation(userApi.updateProfile)
   useEffect(() => {
     if (profile) {
       setValue('name', profile.name)
@@ -49,6 +50,10 @@ export default function Profile() {
       setValue('date_of_birth', profile.date_of_birth ? new Date(profile.date_of_birth) : new Date())
     }
   }, [profile, setValue])
+
+  const onSubmit = handleSubmit(async (data) => {
+    // await updateProfileMutation.mutateAsync()
+  })
   return (
     <div className='rounded-sm bg-white px-2 pb-10 shadow md:px-7 md:pb-20'>
       <div className='border-b border-b-gray-200 py-6'>
@@ -106,28 +111,14 @@ export default function Profile() {
               />
             </div>
           </div>
-          <div className='mt-2 flex flex-col flex-wrap sm:flex-row'>
-            <div className='truncate pt-3 capitalize sm:w-[20%] sm:text-right'>Ngày sinh</div>
-            <div className='sm:w-[80%] sm:pl-5'>
-              <div className='flex justify-between'>
-                <select name='' className='h-10 w-[32%] rounded-sm border border-black/10 px-3'>
-                  <option value='' disabled>
-                    Ngày
-                  </option>
-                </select>
-                <select name='' className='h-10 w-[32%] rounded-sm border border-black/10 px-3'>
-                  <option value='' disabled>
-                    Tháng
-                  </option>
-                </select>
-                <select name='' className='h-10 w-[32%] rounded-sm border border-black/10 px-3'>
-                  <option value='' disabled>
-                    Năm
-                  </option>
-                </select>
-              </div>
-            </div>
-          </div>
+          <Controller
+            control={control}
+            name='date_of_birth'
+            render={({ field }) => (
+              <DateSelect errorMessage={errors.date_of_birth?.message} onChange={field.onChange} value={field.value} />
+            )}
+          />
+
           <div className='mt-2 flex flex-col flex-wrap sm:flex-row'>
             <div className='truncate pt-3 capitalize sm:w-[20%] sm:text-right' />
             <div className='sm:w-[80%] sm:pl-5'>
