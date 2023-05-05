@@ -1,6 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { useEffect } from 'react'
+import { useContext, useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import userApi from 'src/apis/user.api'
 import Button from 'src/components/Button/Button'
@@ -8,12 +8,25 @@ import Input from 'src/components/Input'
 import InputNumber from 'src/components/InputNumber'
 import { UserSchema, userSchema } from 'src/utils/rules'
 import DateSelect from '../../components/DateSelect'
+import { toast } from 'react-toastify'
+import { AppContext } from 'src/contexts/app.context'
 
 type FormData = Pick<UserSchema, 'name' | 'address' | 'phone' | 'date_of_birth' | 'avatar'>
 
 const profileSchema = userSchema.pick(['name', 'address', 'phone', 'date_of_birth', 'avatar'])
 
 export default function Profile() {
+  const { setProfile } = useContext(AppContext)
+
+  const { data: profileData, refetch } = useQuery({
+    queryKey: ['profile'],
+    queryFn: userApi.getProfile
+  })
+
+  const profile = profileData?.data.data
+
+  const updateProfileMutation = useMutation(userApi.updateProfile)
+
   const {
     control,
     register,
@@ -33,14 +46,6 @@ export default function Profile() {
     resolver: yupResolver(profileSchema)
   })
 
-  const { data: profileData } = useQuery({
-    queryKey: ['profile'],
-    queryFn: userApi.getProfile
-  })
-
-  const profile = profileData?.data.data
-
-  const updateProfileMutation = useMutation(userApi.updateProfile)
   useEffect(() => {
     if (profile) {
       setValue('name', profile.name)
@@ -52,7 +57,15 @@ export default function Profile() {
   }, [profile, setValue])
 
   const onSubmit = handleSubmit(async (data) => {
-    // await updateProfileMutation.mutateAsync()
+    const res = await updateProfileMutation.mutateAsync({
+      ...data,
+      date_of_birth: data.date_of_birth?.toISOString()
+    })
+    setProfile(res.data.data)
+    refetch()
+    toast.success(res.data.message)
+
+    console.log(data, 'ddddddddddddd')
   })
   return (
     <div className='rounded-sm bg-white px-2 pb-10 shadow md:px-7 md:pb-20'>
@@ -60,8 +73,7 @@ export default function Profile() {
         <h1 className='text-lg font-medium capitalize text-gray-900'>Hồ Sơ Của Tôi</h1>
         <div className='mt-1 text-sm text-gray-700'>Quản lý thông tin hồ sơ để bảo mật tài khoản</div>
       </div>
-
-      <form className='mt-8 flex flex-col-reverse md:flex-row md:items-start'>
+      <form onSubmit={onSubmit} className='mt-8 flex flex-col-reverse md:flex-row md:items-start'>
         <div className='mt-6 flex-grow md:mt-0 md:pr-12'>
           <div className='flex flex-col flex-wrap sm:flex-row'>
             <div className='truncate pt-3 capitalize sm:w-[20%] sm:text-right'>Email</div>
@@ -123,7 +135,7 @@ export default function Profile() {
             <div className='truncate pt-3 capitalize sm:w-[20%] sm:text-right' />
             <div className='sm:w-[80%] sm:pl-5'>
               <Button
-                className='flex h-9 items-center rounded-sm bg-orange px-5 text-center text-sm text-white hover:bg-orange/80'
+                className='flex h-9 items-center rounded-sm rounded-sm bg-orange px-5 text-center text-sm text-white hover:bg-orange/80'
                 type='submit'
               >
                 Lưu
