@@ -4,7 +4,6 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import RegisterLayout from './Layout/RegisterLayout'
 import MainLayout from './Layout/MainLayout'
-import Profile from './pages/Profile'
 import { useContext } from 'react'
 import { AppContext } from './contexts/app.context'
 import path from './constants/path'
@@ -14,6 +13,7 @@ import CartLayout from './Layout/CartLayout'
 import UserLayout from './pages/User/layouts/UserLayout'
 import ChangePassword from './pages/User/pages/ChangePassword'
 import HistoryPurchase from './pages/User/pages/HistoryPurchase'
+import Profile from './pages/User/pages/Profile'
 
 //Khi người dùng đã login rồi thì sẽ cho tiếp tục vào
 function ProtectedRoute() {
