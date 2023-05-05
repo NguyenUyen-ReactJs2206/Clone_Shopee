@@ -10,6 +10,8 @@ import { UserSchema, userSchema } from 'src/utils/rules'
 import DateSelect from '../../components/DateSelect'
 import { toast } from 'react-toastify'
 import { AppContext } from 'src/contexts/app.context'
+import { setProfileToLocalStorage } from 'src/utils/auth'
+import userImage from 'src/assets/images/user.svg'
 
 type FormData = Pick<UserSchema, 'name' | 'address' | 'phone' | 'date_of_birth' | 'avatar'>
 
@@ -62,6 +64,7 @@ export default function Profile() {
       date_of_birth: data.date_of_birth?.toISOString()
     })
     setProfile(res.data.data)
+    setProfileToLocalStorage(res.data.data)
     refetch()
     toast.success(res.data.message)
 
@@ -135,7 +138,7 @@ export default function Profile() {
             <div className='truncate pt-3 capitalize sm:w-[20%] sm:text-right' />
             <div className='sm:w-[80%] sm:pl-5'>
               <Button
-                className='flex h-9 items-center rounded-sm rounded-sm bg-orange px-5 text-center text-sm text-white hover:bg-orange/80'
+                className='flex h-9 items-center rounded-sm bg-orange px-5 text-center text-sm text-white hover:bg-orange/80'
                 type='submit'
               >
                 Lưu
@@ -146,11 +149,7 @@ export default function Profile() {
         <div className='flex justify-center md:w-72 md:border-l md:border-l-gray-200'>
           <div className='flex flex-col items-center'>
             <div className='my-5 h-24 w-24'>
-              <img
-                src='https://haycafe.vn/wp-content/uploads/2021/11/Anh-avatar-dep-chat-lam-hinh-dai-dien.jpg'
-                alt=''
-                className='h-full w-full rounded-full object-cover'
-              />
+              <img src={profile?.avatar || userImage} alt='' className='h-full w-full rounded-full object-cover' />
             </div>
             <input type='file' accept='.jpg, .jpeg, .png' className='hidden' />
             <button

@@ -6,6 +6,7 @@ import { AppContext } from 'src/contexts/app.context'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import authApi from 'src/apis/auth.api'
 import { purchasesStatus } from 'src/constants/purchase'
+import userImage from 'src/assets/images/user.svg'
 
 export default function NavHeader() {
   const queryClient = useQueryClient()
@@ -88,9 +89,9 @@ export default function NavHeader() {
         >
           <div className='mr-2 h-6 w-6 flex-shrink-0'>
             <img
-              src='https://haycafe.vn/wp-content/uploads/2021/11/Anh-avatar-dep-chat-lam-hinh-dai-dien.jpg'
+              src={profile?.avatar || userImage}
               alt='avatar'
-              className='h-full  w-full rounded-full object-cover'
+              className='h-full w-full  rounded-full bg-current object-cover'
             />
           </div>
           <div>{profile?.email}</div>
