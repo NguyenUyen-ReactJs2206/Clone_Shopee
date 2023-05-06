@@ -1,6 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { useContext, useEffect } from 'react'
+import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import userApi from 'src/apis/user.api'
 import Button from 'src/components/Button/Button'
@@ -12,13 +12,29 @@ import { toast } from 'react-toastify'
 import { AppContext } from 'src/contexts/app.context'
 import { setProfileToLocalStorage } from 'src/utils/auth'
 import userImage from 'src/assets/images/user.svg'
+import { getAvatarUrl } from 'src/utils/utils'
 
 type FormData = Pick<UserSchema, 'name' | 'address' | 'phone' | 'date_of_birth' | 'avatar'>
 
 const profileSchema = userSchema.pick(['name', 'address', 'phone', 'date_of_birth', 'avatar'])
 
+//Flow 1:
+// Nhan upload: upload len Server luon => server tra ve url anh
+// Nhan submit thi gui url anh + data len server
+
+//Flow 2:
+// Nhan upload: ko upload len server
+// Nhan submit thi tien hanh upload len server,
+// neu upload thanh cong thi tien hanh goi api updateProfile
+
 export default function Profile() {
+  const fileInputRef = useRef<HTMLInputElement>(null)
   const { setProfile } = useContext(AppContext)
+  const [file, setFile] = useState<File>()
+
+  const previewImage = useMemo(() => {
+    return file ? URL.createObjectURL(file) : ''
+  }, [file])
 
   const { data: profileData, refetch } = useQuery({
     queryKey: ['profile'],
@@ -28,6 +44,7 @@ export default function Profile() {
   const profile = profileData?.data.data
 
   const updateProfileMutation = useMutation(userApi.updateProfile)
+  const upLoadAvatarMutation = useMutation(userApi.uploadAvatar)
 
   const {
     control,
@@ -47,7 +64,8 @@ export default function Profile() {
     },
     resolver: yupResolver(profileSchema)
   })
-
+  const avatar = watch('avatar')
+  console.log(avatar, 'aaaaaaaaaaaaa')
   useEffect(() => {
     if (profile) {
       setValue('name', profile.name)
@@ -59,17 +77,41 @@ export default function Profile() {
   }, [profile, setValue])
 
   const onSubmit = handleSubmit(async (data) => {
-    const res = await updateProfileMutation.mutateAsync({
-      ...data,
-      date_of_birth: data.date_of_birth?.toISOString()
-    })
-    setProfile(res.data.data)
-    setProfileToLocalStorage(res.data.data)
-    refetch()
-    toast.success(res.data.message)
-
     console.log(data, 'ddddddddddddd')
+    try {
+      //Upload thanh cong
+      let avatarName = avatar
+      if (file) {
+        //Tao formdata - formData(): api cua js
+        const form = new FormData()
+        form.append('image', file)
+        const uploadRes = await upLoadAvatarMutation.mutateAsync(form)
+        avatarName = uploadRes.data.data
+        setValue('avatar', avatarName)
+      }
+      //Call API Update
+      const res = await updateProfileMutation.mutateAsync({
+        ...data,
+        date_of_birth: data.date_of_birth?.toISOString(),
+        avatar: avatarName
+      })
+      setProfile(res.data.data)
+      setProfileToLocalStorage(res.data.data)
+      refetch()
+      toast.success(res.data.message)
+    } catch (error) {
+      console.log(error, 'err')
+    }
   })
+
+  const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const fileFromLocal = event.target.files?.[0]
+    setFile(fileFromLocal)
+  }
+
+  const handleUpload = () => {
+    fileInputRef.current?.click()
+  }
   return (
     <div className='rounded-sm bg-white px-2 pb-10 shadow md:px-7 md:pb-20'>
       <div className='border-b border-b-gray-200 py-6'>
@@ -149,11 +191,22 @@ export default function Profile() {
         <div className='flex justify-center md:w-72 md:border-l md:border-l-gray-200'>
           <div className='flex flex-col items-center'>
             <div className='my-5 h-24 w-24'>
-              <img src={profile?.avatar || userImage} alt='' className='h-full w-full rounded-full object-cover' />
+              <img
+                src={previewImage || getAvatarUrl(avatar)}
+                alt=''
+                className='h-full w-full rounded-full object-cover'
+              />
             </div>
-            <input type='file' accept='.jpg, .jpeg, .png' className='hidden' />
+            <input
+              type='file'
+              accept='.jpg, .jpeg, .png'
+              className='hidden'
+              ref={fileInputRef}
+              onChange={onFileChange}
+            />
             <button
               type='button'
+              onClick={handleUpload}
               className='flex h-10 items-center justify-end rounded-sm border bg-white px-6 text-sm text-gray-600 shadow-sm'
             >
               Chọn ảnh
