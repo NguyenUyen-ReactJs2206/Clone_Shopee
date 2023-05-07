@@ -11,11 +11,13 @@ import DateSelect from '../../components/DateSelect'
 import { toast } from 'react-toastify'
 import { AppContext } from 'src/contexts/app.context'
 import { setProfileToLocalStorage } from 'src/utils/auth'
-import userImage from 'src/assets/images/user.svg'
-import { getAvatarUrl } from 'src/utils/utils'
+import { getAvatarUrl, isAxiosUnprocessableEntityError } from 'src/utils/utils'
+import { ErrorResponseApi } from 'src/types/utils.type'
 
 type FormData = Pick<UserSchema, 'name' | 'address' | 'phone' | 'date_of_birth' | 'avatar'>
-
+type FormDataError = Omit<FormData, 'date_of_birth'> & {
+  date_of_birth?: string
+}
 const profileSchema = userSchema.pick(['name', 'address', 'phone', 'date_of_birth', 'avatar'])
 
 //Flow 1:
@@ -65,7 +67,7 @@ export default function Profile() {
     resolver: yupResolver(profileSchema)
   })
   const avatar = watch('avatar')
-  console.log(avatar, 'aaaaaaaaaaaaa')
+
   useEffect(() => {
     if (profile) {
       setValue('name', profile.name)
@@ -77,7 +79,6 @@ export default function Profile() {
   }, [profile, setValue])
 
   const onSubmit = handleSubmit(async (data) => {
-    console.log(data, 'ddddddddddddd')
     try {
       //Upload thanh cong
       let avatarName = avatar
@@ -100,7 +101,17 @@ export default function Profile() {
       refetch()
       toast.success(res.data.message)
     } catch (error) {
-      console.log(error, 'err')
+      if (isAxiosUnprocessableEntityError<ErrorResponseApi<FormDataError>>(error)) {
+        const formError = error.response?.data.data
+        if (formError) {
+          Object.keys(formError).forEach((key) => {
+            setError(key as keyof FormDataError, {
+              message: formError[key as keyof FormDataError],
+              type: 'Server'
+            })
+          })
+        }
+      }
     }
   })
 
