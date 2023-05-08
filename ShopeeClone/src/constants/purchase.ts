@@ -6,7 +6,7 @@ export const purchasesStatus = {
   waitForConfirmation: 1,
   //sp dang duoc lay hang
   waitForGetting: 2,
-  //sp dang duoc ban chuyen
+  //sp dang duoc van chuyen
   inFrogress: 3,
   //sp da duoc giao
   delivered: 4,
