@@ -9,7 +9,7 @@ import Input from 'src/components/Input'
 import { isAxiosUnprocessableEntityError } from 'src/utils/utils'
 import { ErrorResponseApi } from 'src/types/utils.type'
 import { AppContext } from 'src/contexts/app.context'
-import Button from 'src/components/Button/Button'
+import Button from 'src/components/Button'
 import authApi from 'src/apis/auth.api'
 
 type FormData = Pick<Schema, 'email' | 'password' | 'confirm_password'>
