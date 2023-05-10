@@ -18,7 +18,7 @@ export default function Input({
   rules,
   classNameInput = 'w-full rounded-sm border border-gray-300 p-3 outline-none focus:border-gray-500 focus:shadow-sm',
   classNameError = 'mt-1 min-h-[1rem] text-sm text-red-600',
-  classNameEye = 'absolute right-[5px] top-[8px] h-5 w-5 cursor-pointer',
+  classNameEye = 'absolute right-[5px] top-[11px] h-5 w-5 cursor-pointer',
   ...rest
 }: Props) {
   const [openEye, setOpenEye] = useState(false)
@@ -35,7 +35,7 @@ export default function Input({
     return rest.type
   }
   return (
-    <div className={className}>
+    <div className={'relative ' + className}>
       <input className={classNameInput} {...registerResult} {...rest} type={handleType()} />
       {rest.type === 'password' && openEye && (
         <svg

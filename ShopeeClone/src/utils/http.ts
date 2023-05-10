@@ -12,9 +12,15 @@ import {
 } from './auth'
 import path from 'src/constants/path'
 import config from 'src/constants/config'
-import { URL_LOGIN, URL_REFRESH_TOKEN, URL_REGISTER } from 'src/apis/auth.api'
+import { URL_LOGIN, URL_LOGOUT, URL_REFRESH_TOKEN, URL_REGISTER } from 'src/apis/auth.api'
 import { isAxiosExpiredTokenError, isAxiosUnauthorizedError } from './utils'
 
+// Purchase: 1s - 3s error
+// Me: 2s - 5s
+// RefreshToken ch Purchase: 3s - 4s
+// Goi lai Purchase: 4s - 6s
+// RefreshToken moi cho Me: 5s - 6s
+// Goi lai Me tu giay so 6
 class Http {
   instance: AxiosInstance
   private accessToken: string
@@ -29,7 +35,7 @@ class Http {
       timeout: 10000,
       headers: {
         'Content-Type': 'application/json',
-        'expire-access-token': 10, //10s
+        'expire-access-token': 5, //10s
         'expire-refresh-token': 60 * 60 //1h
       }
     })
@@ -58,7 +64,7 @@ class Http {
           setAccessTokenToLocalStorage(this.accessToken)
           setRefreshTokenToLocalStorage(this.refreshToken)
           setProfileToLocalStorage(data.data.user)
-        } else if (url === path.logout) {
+        } else if (url === URL_LOGOUT) {
           this.accessToken = ''
           this.refreshToken = ''
           clearLocalStorage()
@@ -66,7 +72,10 @@ class Http {
         return response
       },
       (error: AxiosError) => {
-        if (error.response?.status !== HttpStatusCode.UnprocessableEntity) {
+        //Chi toast loi khong phai la 422 va 401
+        if (
+          ![HttpStatusCode.UnprocessableEntity, HttpStatusCode.Unauthorized].includes(error.response?.status as number)
+        ) {
           const data: any | undefined = error.response?.data
           const message = data?.message || error.message
           toast.error(message)
@@ -84,10 +93,14 @@ class Http {
           //Thi chung ta moi tien hanh goi Refresh Token
 
           if (isAxiosExpiredTokenError(error) && url !== URL_REFRESH_TOKEN) {
+            //Han che goi 2 lan handleRefreshToken
             this.refreshTokenRequest = this.refreshTokenRequest
               ? this.refreshTokenRequest
               : this.handleRefreshToken().finally(() => {
-                  this.refreshTokenRequest = null
+                  //Giu refreshTokenRequest trong 10s cho nhung request tiep theo neu co 401 thi dung
+                  setTimeout(() => {
+                    this.refreshTokenRequest = null
+                  }, 10000)
                 })
             return this.refreshTokenRequest.then((access_token) => {
               if (config.headers) config.headers.Authorization = access_token
