@@ -10,7 +10,7 @@ import Input from 'src/components/Input'
 import { AppContext } from 'src/contexts/app.context'
 import Button from 'src/components/Button'
 import authApi from 'src/apis/auth.api'
-import { Helmet } from 'react-helmet'
+import { Helmet } from 'react-helmet-async'
 
 type FormData = Pick<Schema, 'email' | 'password'>
 const loginSchema = schema.pick(['email', 'password'])

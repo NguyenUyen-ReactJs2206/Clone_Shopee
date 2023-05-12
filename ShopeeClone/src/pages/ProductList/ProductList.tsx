@@ -7,7 +7,7 @@ import Pagination from 'src/components/Pagination'
 import { ProductListConfig } from 'src/types/product.type'
 import categoryApi from 'src/apis/category.api'
 import useQueryConfig from 'src/hooks/useQueryConfig'
-import { Helmet } from 'react-helmet'
+import { Helmet } from 'react-helmet-async'
 
 export default function ProductList() {
   const queryConfig = useQueryConfig()

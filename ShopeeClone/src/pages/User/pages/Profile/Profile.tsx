@@ -14,6 +14,7 @@ import { setProfileToLocalStorage } from 'src/utils/auth'
 import { getAvatarUrl, isAxiosUnprocessableEntityError } from 'src/utils/utils'
 import { ErrorResponseApi } from 'src/types/utils.type'
 import InputFile from 'src/components/InputFile'
+import { Helmet } from 'react-helmet-async'
 
 function Info() {
   const methods = useFormContext<FormData>()
@@ -25,6 +26,10 @@ function Info() {
   return (
     <Fragment>
       <div className='mt-6 flex flex-col flex-wrap sm:flex-row'>
+        <Helmet>
+          <title>Người dùng | Shopee Clone</title>
+          <meta name='description' content='Trang thông tin tài khoản của bạn trong dự án shopee clone' />
+        </Helmet>
         <div className='truncate pt-3 capitalize sm:w-[20%] sm:text-right'>Tên</div>
         <div className='sm:w-[80%] sm:pl-5'>
           <Input

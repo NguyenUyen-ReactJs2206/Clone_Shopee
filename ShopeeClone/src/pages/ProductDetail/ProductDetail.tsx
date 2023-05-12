@@ -13,7 +13,7 @@ import purchaseApi from 'src/apis/purchase.api'
 import { purchasesStatus } from 'src/constants/purchase'
 import path from 'src/constants/path'
 import { useTranslation } from 'react-i18next'
-import { Helmet } from 'react-helmet'
+import { Helmet } from 'react-helmet-async'
 import { convert } from 'html-to-text'
 
 export default function ProductDetail() {
@@ -140,7 +140,7 @@ export default function ProductDetail() {
         <meta
           name='description'
           content={convert(product.description, {
-            wordwrap: 120
+            limits: { maxInputLength: 150 }
           })}
         />
       </Helmet>
