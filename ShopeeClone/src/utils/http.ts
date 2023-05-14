@@ -27,6 +27,11 @@ class Http {
   private refreshToken: string
   private refreshTokenRequest: Promise<string> | null
   constructor() {
+    // ?? tại sao thay vì chỉ cần dùng hàm getAccessTokenFromLS để lấy được accessToken rồi, ta lại còn phải khai báo accessToken ở trong
+    // ?? class constructor để làm gì nữa ?
+    // * vì khi ta dùng getAccessTokenFromLS là ta truy xuất dữ liệu ở LS, mà làm như vậy là truy xuất vào trong ổ cứng
+    // * còn ta khai báo biến accessToken trong constructor thì dữ liệu được truy xuất trên ram
+    // * MÀ TRUY XUẤT Ở RAM THÌ LẠI NHANH HƠN Ổ CỨNG
     this.accessToken = getAccessTokenFromLocalStorage()
     this.refreshToken = getRefreshTokenFromLocalStorage()
     this.refreshTokenRequest = null
@@ -35,8 +40,8 @@ class Http {
       timeout: 10000,
       headers: {
         'Content-Type': 'application/json',
-        'expire-access-token': 5, //10s
-        'expire-refresh-token': 60 * 60 //1h
+        'expire-access-token': 259200, //60*60*24*3 - 3 ngay
+        'expire-refresh-token': 2592000 //30 ngay
       }
     })
     //
