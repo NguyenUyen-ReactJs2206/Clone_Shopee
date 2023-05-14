@@ -10,7 +10,6 @@ import {
   setProfileToLocalStorage,
   setRefreshTokenToLocalStorage
 } from './auth'
-import path from 'src/constants/path'
 import config from 'src/constants/config'
 import { URL_LOGIN, URL_LOGOUT, URL_REFRESH_TOKEN, URL_REGISTER } from 'src/apis/auth.api'
 import { isAxiosExpiredTokenError, isAxiosUnauthorizedError } from './utils'
