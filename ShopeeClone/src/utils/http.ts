@@ -47,7 +47,7 @@ class Http {
     this.instance.interceptors.request.use(
       (config) => {
         if (this.accessToken && config.headers) {
-          config.headers.Authorization = this.accessToken
+          config.headers.authorization = this.accessToken
           return config
         }
         return config
@@ -80,8 +80,11 @@ class Http {
         if (
           ![HttpStatusCode.UnprocessableEntity, HttpStatusCode.Unauthorized].includes(error.response?.status as number)
         ) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const data: any | undefined = error.response?.data
+          console.log(data, 'daaaaaaaaa')
           const message = data?.message || error.message
+          console.log(message, 'meeeeeeeeeee')
           toast.error(message)
         }
         //Loi 401 co rat nhieu truong hop xay ra:
@@ -91,6 +94,10 @@ class Http {
 
         //Neu la loi 401
         if (isAxiosUnauthorizedError(error)) {
+          const data: any | undefined = error.response?.data
+          const message = data?.message || error.message
+          toast.error(message)
+
           const config = error.response?.config || ({ headers: {} } as InternalAxiosRequestConfig)
           const { url } = config
           //Truong hop Token het han va Refresh do khong phai la cua request refresh token
@@ -107,9 +114,9 @@ class Http {
                   }, 10000)
                 })
             return this.refreshTokenRequest.then((access_token) => {
-              if (config.headers) config.headers.Authorization = access_token
+              if (config.headers) config.headers.authorization = access_token
               //Nghia la chung ta tiep tuc goi lai request cu vua bi loi
-              return this.instance({ ...config, headers: { ...config.headers, Authorization: access_token } })
+              return this.instance({ ...config, headers: { ...config.headers, authorization: access_token } })
             })
           }
           clearLocalStorage()
