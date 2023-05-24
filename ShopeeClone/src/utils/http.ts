@@ -20,7 +20,7 @@ import { isAxiosExpiredTokenError, isAxiosUnauthorizedError } from './utils'
 // Goi lai Purchase: 4s - 6s
 // RefreshToken moi cho Me: 5s - 6s
 // Goi lai Me tu giay so 6
-class Http {
+export class Http {
   instance: AxiosInstance
   private accessToken: string
   private refreshToken: string
@@ -82,9 +82,7 @@ class Http {
         ) {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const data: any | undefined = error.response?.data
-          console.log(data, 'daaaaaaaaa')
           const message = data?.message || error.message
-          console.log(message, 'meeeeeeeeeee')
           toast.error(message)
         }
         //Loi 401 co rat nhieu truong hop xay ra:
