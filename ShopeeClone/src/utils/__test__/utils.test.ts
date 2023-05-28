@@ -1,6 +1,6 @@
 import { AxiosError } from 'axios'
-import { describe, expect, it } from 'vitest'
-import { isAxiosError, isAxiosUnprocessableEntityError } from '../utils'
+import { describe, expect, it, test } from 'vitest'
+import { demo, isAxiosError, isAxiosUnprocessableEntityError } from '../utils'
 import HttpStatusCode from 'src/constants/httpStatusCode.enum'
 
 // describe dùng để mô tả tập hợp các ngữ cảnh
@@ -34,4 +34,10 @@ describe('isAxiosUnprocessableEntityError', () => {
       } as any)
     )
   ).toBe(true)
+})
+
+//test === it
+describe('demo', () => {
+  test('demo return 2', () => {})
+  expect(demo(4)).toBe(2)
 })
